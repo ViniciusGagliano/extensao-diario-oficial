@@ -15,10 +15,7 @@
             ],
             "js": [
                 "jquery.js",
-                "axios.min.js",
-                "xml2json.js",
-                "F6_PBEFunctions.js",
-                "js.js"
+                "main.js"
             ]
         }
     ],

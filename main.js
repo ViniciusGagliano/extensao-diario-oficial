@@ -36,11 +36,11 @@ $(document).ready(function () {
         //Métodos
         Home: async () => {
             Funcoes.LocalStorage.RemoveAll();
+            localStorage.setItem("pagina", 1);
+            localStorage.setItem("baixados", 0);
             window.open("http://www.mprj.mp.br/diario-oficial-eletronico", "_self");
         },
         DiarioOficial: async () => {
-            localStorage.setItem("pagina", 1);
-            localStorage.setItem("baixados", 0);
             $('#link-all-mobile a').each(async (index, value) => {
                 if (value.text.indexOf('Ver todos') >= 0)
                     window.open(value.href, "_self");
