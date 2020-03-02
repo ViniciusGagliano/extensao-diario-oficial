@@ -24,6 +24,43 @@ $(document).ready(function () {
                     }
                 });
             },
+            BaixarPdf: async (id) => {
+                return new Promise(async resolve => {
+                    await $(`#${id} a`).each(async (index, value) => {
+                        if (value.href.indexOf('.pdf') >= 0) {
+                            // window.open(value.href);
+                            let a = document.createElement("a");
+                            a.href = value.href;
+                            a.download = value.text.trim().substr(1, 72);
+                            document.body.appendChild(a);
+                            a.click();
+                            a.remove();
+
+                            let baixados = localStorage.getItem("baixados");
+                            localStorage.setItem("baixados", ++baixados);
+                        }
+                    });
+
+                    resolve();
+                });
+            },
+            TrocarPagina: async (c) => {
+                return new Promise(async resolve => {
+                    let pagina = localStorage.getItem("pagina");
+                    console.log(pagina);
+                    localStorage.setItem("pagina", ++pagina);
+                    await $(`${c} li`).each(async function () {
+                        $(this).find('a').each(async (key, value) => {
+                            console.log(value.text);
+                            if (value.text.trim() === 'Próximo') {
+                                localStorage.setItem("baixados", 0);
+                                window.open(value.href, "_self");
+                            }
+                        });
+                    });
+                    resolve();
+                });
+            },
         },
     };
 
@@ -37,7 +74,6 @@ $(document).ready(function () {
         Home: async () => {
             Funcoes.LocalStorage.RemoveAll();
             localStorage.setItem("pagina", 1);
-            localStorage.setItem("baixados", 0);
             window.open("http://www.mprj.mp.br/diario-oficial-eletronico", "_self");
         },
         DiarioOficial: async () => {
@@ -47,38 +83,49 @@ $(document).ready(function () {
             });
         },
         Busca: async () => {
-            if (localStorage.getItem("paginas") === 12) {
+            localStorage.setItem("baixados", 0);
+            if (localStorage.getItem("pagina") > 11) {
                 window.close();
                 return false;
             }
 
-            await $('#container-busca a').each(async (index, value) => {
-                if (value.href.indexOf('.pdf') >= 0) {
-                    // window.open(value.href);
-                    let a = document.createElement("a");
-                    a.href = value.href;
-                    a.download = value.text.trim().substring(1, 72);
-                    document.body.appendChild(a);
-                    a.click();
-                    a.remove();
+            // await Funcoes.Util.BaixarPdf('container-busca').then(async _ => {
+            //     console.log(localStorage.getItem("baixados"));
+            //     if (localStorage.getItem("baixados") > 14)
+            //         await Funcoes.Util.TrocarPagina('.pager.lfr-pagination-buttons');
+            // });
 
-                    let baixados = localStorage.getItem("baixados");
-                    localStorage.setItem("baixados", ++baixados);
-                }
-            });
+            let thread = setInterval(async function () {
+                await $(`#container-busca a`).each((index, value) => {
+                    if (value.href.indexOf('.pdf') >= 0) {
+                        // window.open(value.href);
+                        let a = document.createElement("a");
+                        a.href = value.href;
+                        a.download = value.text.trim().substr(1, 72);
+                        document.body.appendChild(a);
+                        a.click();
+                        a.remove();
 
-            if (localStorage.getItem("baixados") === 15) {
-                let pagina = localStorage.getItem("pagina");
-                localStorage.setItem("pagina", ++pagina);
-                await $('.pager.lfr-pagination-buttons li').each(async function () {
-                    $(this).find('a').each(async (key, value) => {
-                        if (value.text.trim() === 'Próximo') {
-                            localStorage.setItem("baixados", 0);
-                            window.open(value.href, "_self");
-                        }
-                    });
+                        let baixados = localStorage.getItem("baixados");
+                        localStorage.setItem("baixados", ++baixados);
+                    }
+
+                    if (localStorage.getItem("baixados") > 14) {
+                        clearInterval(thread);
+                        let pagina = localStorage.getItem("pagina");
+                        localStorage.setItem("pagina", ++pagina);
+                        $(`.pager.lfr-pagination-buttons li`).each(function () {
+                            $(this).find('a').each((key, value) => {
+                                console.log(value.text);
+                                if (value.text.trim() === 'Próximo') {
+                                    localStorage.setItem("baixados", 0);
+                                    window.open(value.href, "_self");
+                                }
+                            });
+                        });
+                    }
                 });
-            }
+            })
         },
     };
 
