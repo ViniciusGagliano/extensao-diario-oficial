@@ -1,0 +1,29 @@
+{
+    "manifest_version": 2,
+    "name": "Extensão Download Diário Oficial",
+    "version": "1.0",
+    "description": "Digita a proposta automaticamente",
+    "browser_action": {
+        "default_icon": "icone.png",
+        "default_popup": "popup.html"
+    },
+    "content_scripts": [
+        {
+            "matches": [
+                "http://*/*",
+                "https://*/*"
+            ],
+            "js": [
+                "jquery.js",
+                "axios.min.js",
+                "xml2json.js",
+                "F6_PBEFunctions.js",
+                "js.js"
+            ]
+        }
+    ],
+    "permissions": [
+        "http://localhost/*",
+        "http://www.mprj.mp.br/*"
+    ]
+}
