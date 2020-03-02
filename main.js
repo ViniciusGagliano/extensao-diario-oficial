@@ -47,12 +47,21 @@ $(document).ready(function () {
             });
         },
         Busca: async () => {
-            if (localStorage.getItem("paginas") === 12)
+            if (localStorage.getItem("paginas") === 12) {
+                window.close();
                 return false;
-            
+            }
+
             await $('#container-busca a').each(async (index, value) => {
                 if (value.href.indexOf('.pdf') >= 0) {
-                    window.open(value.href);
+                    // window.open(value.href);
+                    let a = document.createElement("a");
+                    a.href = value.href;
+                    a.download = value.text.trim().substring(1, 72);
+                    document.body.appendChild(a);
+                    a.click();
+                    a.remove();
+
                     let baixados = localStorage.getItem("baixados");
                     localStorage.setItem("baixados", ++baixados);
                 }
@@ -61,11 +70,13 @@ $(document).ready(function () {
             if (localStorage.getItem("baixados") === 15) {
                 let pagina = localStorage.getItem("pagina");
                 localStorage.setItem("pagina", ++pagina);
-                await $('.pager.lfr-pagination-buttons li').each(async (index, value) => {
-                    if (value.text === 'Próximo') {
-                        localStorage.setItem("baixados", 0);
-                        window.open(value.href, "_self");
-                    }
+                await $('.pager.lfr-pagination-buttons li').each(async function () {
+                    $(this).find('a').each(async (key, value) => {
+                        if (value.text === 'Próximo') {
+                            localStorage.setItem("baixados", 0);
+                            window.open(value.href, "_self");
+                        }
+                    });
                 });
             }
         },
@@ -78,7 +89,7 @@ $(document).ready(function () {
             resolve(Telas.DiarioOficial());
         else if (Telas.isBusca)
             resolve(Telas.Busca());
-        else 
+        else
             return false;
     }).catch(err => console.log(err));
     return false;
