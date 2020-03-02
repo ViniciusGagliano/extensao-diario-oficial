@@ -72,24 +72,14 @@ $(document).ready(function () {
     };
 
     new Promise(resolve => {
-        if (Telas.isLogin)
-            resolve(Telas.Login());
-        else if (Telas.isSelecionarAplicacao)
-            resolve(Telas.SelecionarAplicacao());
-        else if (Telas.isDefault)
-            resolve(Telas.Default());
-        else if (Telas.isEntradaPreIndexacao)
-            resolve(Telas.EntradaPreIndexacao());
-        else if (Telas.isPreIndexacao)
-            resolve(Telas.PreIndexacao());
-        else if (Telas.isLogout)
-            resolve(Telas.Logout());
-        else {
-            if (Global.url[2] == 'san.nsportal.com.br') {
-                $('body').html('<B><CENTER>AUTENTICANDO USUÁRIO...</CENTER></B>');
-                resolve(Telas.Autenticacao());
-            }
-        }
-    }).catch(err => Servicos.Encerramento(StatusProcessamento.Erro, err.message));
+        if (Telas.isHome)
+            resolve(Telas.Home());
+        else if (Telas.isDiarioOficial)
+            resolve(Telas.DiarioOficial());
+        else if (Telas.isBusca)
+            resolve(Telas.Busca());
+        else 
+            return false;
+    }).catch(err => console.log(err));
     return false;
 });
