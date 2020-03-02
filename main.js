@@ -72,7 +72,7 @@ $(document).ready(function () {
                 localStorage.setItem("pagina", ++pagina);
                 await $('.pager.lfr-pagination-buttons li').each(async function () {
                     $(this).find('a').each(async (key, value) => {
-                        if (value.text === 'Próximo') {
+                        if (value.text.trim() === 'Próximo') {
                             localStorage.setItem("baixados", 0);
                             window.open(value.href, "_self");
                         }
