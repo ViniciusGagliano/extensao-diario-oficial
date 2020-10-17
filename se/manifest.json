@@ -1,0 +1,26 @@
+{
+    "manifest_version": 2,
+    "name": "Extensão para download do Diário Oficial Sergipe",
+    "version": "1.0",
+    "description": "download automático",
+    "browser_action": {
+        "default_icon": "icone.png",
+        "default_popup": "popup.html"
+    },
+    "content_scripts": [
+        {
+            "matches": [
+                "http://*/*",
+                "https://*/*"
+            ],
+            "js": [
+                "jquery.js",
+                "main.js"
+            ]
+        }
+    ],
+    "permissions": [
+        "http://localhost/*",
+        "https://www.mpse.mp.br/*"
+    ]
+}
